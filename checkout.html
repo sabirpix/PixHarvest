@@ -1,25 +1,104 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Checkout</title><link rel="stylesheet" href="css/styles.css"></head><body>
-<header class="container header"><a class="brand" href="index.html"><img src="https://ucarecdn.com/2d4ab199-055b-4852-906f-72dd184bd2d4/-/format/auto/" alt="logo"><div class="title"><h1>PixHarvest</h1></div></a></header>
-<main class="container"><h2>Checkout</h2><div class="grid"><div class="card form">
-<form id="checkout-form">
-<label>Name</label><input id="name" required>
-<label>Phone</label><input id="phone" required>
-<label>Address</label><textarea id="address" rows="3" required></textarea>
-<label>Product</label><select id="product"></select>
-<label>Quantity</label><input type="number" id="quantity" value="1" min="1" required>
-<label>Notes</label><textarea id="notes" rows="2"></textarea>
-<div style="display:flex;gap:8px"><button class="btn primary" type="submit">Place Order (COD)</button><a class="btn ghost" href="products.html">Back</a></div>
-</form></div><div class="card"><h3>Delivery</h3><p class="desc">We ship via partner. Shipping charged on confirmation.</p></div></div></main>
-<script type="module">
-import { products } from './js/products.js';
-import { initFirebase, pushOrder } from './js/main.js';
-const sel = document.getElementById('product');
-products.forEach(p=> { const o=document.createElement('option'); o.value=p.id; o.textContent = `${p.name} — ₹${p.price}`; sel.appendChild(o);});
-const params = new URLSearchParams(location.search); if(params.get('product')) sel.value = params.get('product');
-initFirebase();
-document.getElementById('checkout-form').addEventListener('submit', async e=> {
-  e.preventDefault();
-  const order = { name: document.getElementById('name').value.trim(), phone: document.getElementById('phone').value.trim(), address: document.getElementById('address').value.trim(), productId: document.getElementById('product').value, quantity: parseInt(document.getElementById('quantity').value,10), notes: document.getElementById('notes').value.trim(), createdAt: Date.now(), status: 'Pending' };
-  try{ const id = await pushOrder(order); location.href = `confirmation.html?orderId=${id}` }catch(err){ console.error(err); alert('Failed to place order'); }
-});
-</script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PixHarvest | Checkout</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script type="module" src="js/firebase-config.js" defer></script>
+  <script type="module" src="js/main.js" defer></script>
+</head>
+
+<body>
+  <header class="header container">
+    <a href="index.html" class="brand">
+      <img src="assets/logo.png" alt="PixHarvest Logo">
+      <div class="title">
+        <h1>PixHarvest</h1>
+        <p>Authentic Assamese Pitha – Tradition with a Crunch</p>
+      </div>
+    </a>
+    <nav class="nav">
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="about.html">About</a>
+      <a href="admin.html">Admin</a>
+    </nav>
+    <button class="hamburger" id="hamburger">☰</button>
+  </header>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <div class="menu">
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="about.html">About</a>
+      <a href="admin.html">Admin</a>
+    </div>
+  </div>
+
+  <section class="container">
+    <h2>Checkout</h2>
+    <form id="checkoutForm" class="form">
+      <label>Full Name</label>
+      <input type="text" id="name" required>
+
+      <label>Phone Number</label>
+      <input type="tel" id="phone" required>
+
+      <label>Address</label>
+      <textarea id="address" required></textarea>
+
+      <label>Product</label>
+      <input type="text" id="product" readonly>
+
+      <label>Quantity</label>
+      <input type="number" id="quantity" min="1" value="1" required>
+
+      <button type="submit" class="btn primary">Place Order (COD)</button>
+    </form>
+  </section>
+
+  <footer class="footer">
+    <p>© 2025 PixHarvest. All rights reserved.</p>
+  </footer>
+
+  <script type="module">
+    import { database, ref, push, set } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
+    import { db } from './js/firebase-config.js';
+
+    // Get product from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const product = urlParams.get('product');
+    if (product) document.getElementById('product').value = product;
+
+    const form = document.getElementById('checkoutForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const phone = document.getElementById('phone').value;
+      const address = document.getElementById('address').value;
+      const product = document.getElementById('product').value;
+      const quantity = document.getElementById('quantity').value;
+
+      const orderRef = push(ref(db, "orders"));
+      await set(orderRef, {
+        name, phone, address, product, quantity,
+        status: "Pending",
+        createdAt: new Date().toISOString()
+      });
+
+      alert("Order placed successfully!");
+      window.location.href = "confirmation.html";
+    });
+  </script>
+
+  <script>
+    const menu = document.getElementById('mobileMenu');
+    const hamburger = document.getElementById('hamburger');
+    hamburger.addEventListener('click', () => {
+      menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+    });
+  </script>
+</body>
+</html>
