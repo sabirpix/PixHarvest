@@ -1,0 +1,12 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Products</title><link rel="stylesheet" href="css/styles.css"></head><body>
+<header class="container header"><a class="brand" href="index.html"><img src="https://ucarecdn.com/2d4ab199-055b-4852-906f-72dd184bd2d4/-/format/auto/" alt="logo"><div class="title"><h1>PixHarvest</h1></div></a></header>
+<main class="container"><h2>Shop Pitha</h2><div class="grid" id="products-grid"></div></main>
+<script type="module">
+import { products } from './js/products.js';
+const grid = document.getElementById('products-grid');
+products.forEach(p=>{
+  const c = document.createElement('div'); c.className='card';
+  c.innerHTML = `<img src="https://ucarecdn.com/2d4ab199-055b-4852-906f-72dd184bd2d4/-/format/auto/" alt="${p.name}"><h3>${p.name}</h3><p class="desc">${p.desc}</p><div class="price">₹${p.price}</div><div class="actions"><a class="btn ghost" href="checkout.html?product=${p.id}">Buy Now</a></div>`;
+  grid.appendChild(c);
+});
+</script></body></html>
