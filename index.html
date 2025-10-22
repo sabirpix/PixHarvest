@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>PixHarvest</title>
+<link rel="stylesheet" href="css/styles.css">
+<link rel="icon" href="https://ucarecdn.com/2d4ab199-055b-4852-906f-72dd184bd2d4/-/format/auto/">
+</head>
+<body>
+<header class="container header">
+  <a class="brand" href="index.html"><img src="https://ucarecdn.com/2d4ab199-055b-4852-906f-72dd184bd2d4/-/format/auto/" alt="logo"><div class="title"><h1>PixHarvest</h1><p>Authentic Assamese Pitha</p></div></a>
+  <nav class="nav">
+    <a href="products.html">Shop</a>
+    <a href="about.html">About</a>
+    <a href="admin.html">Admin</a>
+    <a class="cta" href="products.html">Order Now</a>
+  </nav>
+</header>
+<main class="container">
+  <section class="hero">
+    <div class="copy">
+      <h2>Authentic Assamese Pitha — Tradition with a Crunch</h2>
+      <p class="lead">Handmade daily and shipped with care. Try our classic selection.</p>
+      <div class="hero-cta"><a class="btn primary" href="products.html">Shop Pitha</a></div>
+    </div>
+    <div class="media"><img src="https://ucarecdn.com/2d4ab199-055b-4852-906f-72dd184bd2d4/-/format/auto/" alt="pattern" style="width:300px;border-radius:12px"></div>
+  </section>
+  <section>
+    <h3>Our Selection</h3>
+    <div class="grid" id="featured-grid"></div>
+  </section>
+</main>
+<footer class="footer container">© <span id="year"></span> PixHarvest</footer>
+<script type="module">
+  import { products } from './js/products.js';
+  document.getElementById('year').textContent = new Date().getFullYear();
+  const grid = document.getElementById('featured-grid');
+  products.forEach(p=>{
+    const d = document.createElement('div'); d.className='card';
+    d.innerHTML = `<img src="https://ucarecdn.com/2d4ab199-055b-4852-906f-72dd184bd2d4/-/format/auto/" alt="${p.name}"><h3>${p.name}</h3><p class="desc">${p.desc}</p><div class="price">₹${p.price}</div><div class="actions"><a class="btn ghost" href="products.html">View</a><a class="btn primary" href="checkout.html?product=${p.id}">Buy</a></div>`;
+    grid.appendChild(d);
+  });
+</script>
+</body>
+</html>
