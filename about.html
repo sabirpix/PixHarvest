@@ -1,9 +1,96 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>About</title><link rel="stylesheet" href="css/styles.css"></head><body>
-<header class="container header"><a class="brand" href="index.html"><img src="https://ucarecdn.com/2d4ab199-055b-4852-906f-72dd184bd2d4/-/format/auto/" alt="logo"><div class="title"><h1>PixHarvest</h1></div></a></header>
-<main class="container"><section class="card"><h2>Our Story</h2><p>PixHarvest brings handcrafted Assamese Pitha made using family recipes. We focus on quality and tradition.</p></section>
-<section style="margin-top:16px"><h3>Contact</h3><div class="grid"><div class="card form"><form id="contactForm"><label>Name</label><input id="cname" required><label>Email</label><input id="cemail" type="email" required><label>Message</label><textarea id="cmessage" rows="4" required></textarea><button class="btn primary" type="submit">Send</button></form></div><div class="card"><h4>Other ways</h4><p>Email: hello@pixharvest.example</p></div></div></section></main>
-<script type="module">
-import { initFirebase, pushContact } from './js/main.js';
-initFirebase();
-document.getElementById('contactForm').addEventListener('submit', async e=>{ e.preventDefault(); try{ await pushContact({ name: document.getElementById('cname').value.trim(), email: document.getElementById('cemail').value.trim(), message: document.getElementById('cmessage').value.trim(), createdAt: Date.now() }); alert('Thanks!'); e.target.reset(); }catch(err){ console.error(err); alert('Failed'); }});
-</script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PixHarvest | About & Contact</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script type="module" src="js/firebase-config.js" defer></script>
+</head>
+
+<body>
+  <header class="header container">
+    <a href="index.html" class="brand">
+      <img src="assets/logo.png" alt="PixHarvest Logo">
+      <div class="title">
+        <h1>PixHarvest</h1>
+        <p>Authentic Assamese Pitha – Tradition with a Crunch</p>
+      </div>
+    </a>
+    <nav class="nav">
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="about.html" class="active">About</a>
+      <a href="admin.html">Admin</a>
+    </nav>
+    <button class="hamburger" id="hamburger">☰</button>
+  </header>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <div class="menu">
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="about.html">About</a>
+      <a href="admin.html">Admin</a>
+    </div>
+  </div>
+
+  <section class="container about-section">
+    <h2>Our Story</h2>
+    <p>
+      PixHarvest was founded to bring the authentic taste of Assamese tradition to modern tables.
+      From the steaming Chitoi Pitha to the soft Bhapa Pitha, our delicacies are handcrafted 
+      with the finest ingredients sourced from Assam’s local farms.  
+      Each bite is a celebration of heritage, warmth, and community.
+    </p>
+  </section>
+
+  <section class="container contact-section">
+    <h2>Contact Us</h2>
+    <form id="contactForm" class="form">
+      <label>Name</label>
+      <input type="text" id="cname" required>
+
+      <label>Email</label>
+      <input type="email" id="cemail" required>
+
+      <label>Message</label>
+      <textarea id="cmessage" required></textarea>
+
+      <button type="submit" class="btn primary">Send Message</button>
+    </form>
+  </section>
+
+  <footer class="footer">
+    <p>© 2025 PixHarvest. All rights reserved.</p>
+  </footer>
+
+  <script type="module">
+    import { db } from './js/firebase-config.js';
+    import { ref, push, set } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
+
+    const contactForm = document.getElementById('contactForm');
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('cname').value;
+      const email = document.getElementById('cemail').value;
+      const message = document.getElementById('cmessage').value;
+
+      const msgRef = push(ref(db, 'messages'));
+      await set(msgRef, { name, email, message, createdAt: new Date().toISOString() });
+
+      alert("Message sent successfully!");
+      contactForm.reset();
+    });
+  </script>
+
+  <script>
+    const menu = document.getElementById('mobileMenu');
+    const hamburger = document.getElementById('hamburger');
+    hamburger.addEventListener('click', () => {
+      menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+    });
+  </script>
+</body>
+</html>
