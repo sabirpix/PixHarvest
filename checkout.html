@@ -1,0 +1,25 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Checkout</title><link rel="stylesheet" href="css/styles.css"></head><body>
+<header class="container header"><a class="brand" href="index.html"><img src="https://ucarecdn.com/2d4ab199-055b-4852-906f-72dd184bd2d4/-/format/auto/" alt="logo"><div class="title"><h1>PixHarvest</h1></div></a></header>
+<main class="container"><h2>Checkout</h2><div class="grid"><div class="card form">
+<form id="checkout-form">
+<label>Name</label><input id="name" required>
+<label>Phone</label><input id="phone" required>
+<label>Address</label><textarea id="address" rows="3" required></textarea>
+<label>Product</label><select id="product"></select>
+<label>Quantity</label><input type="number" id="quantity" value="1" min="1" required>
+<label>Notes</label><textarea id="notes" rows="2"></textarea>
+<div style="display:flex;gap:8px"><button class="btn primary" type="submit">Place Order (COD)</button><a class="btn ghost" href="products.html">Back</a></div>
+</form></div><div class="card"><h3>Delivery</h3><p class="desc">We ship via partner. Shipping charged on confirmation.</p></div></div></main>
+<script type="module">
+import { products } from './js/products.js';
+import { initFirebase, pushOrder } from './js/main.js';
+const sel = document.getElementById('product');
+products.forEach(p=> { const o=document.createElement('option'); o.value=p.id; o.textContent = `${p.name} — ₹${p.price}`; sel.appendChild(o);});
+const params = new URLSearchParams(location.search); if(params.get('product')) sel.value = params.get('product');
+initFirebase();
+document.getElementById('checkout-form').addEventListener('submit', async e=> {
+  e.preventDefault();
+  const order = { name: document.getElementById('name').value.trim(), phone: document.getElementById('phone').value.trim(), address: document.getElementById('address').value.trim(), productId: document.getElementById('product').value, quantity: parseInt(document.getElementById('quantity').value,10), notes: document.getElementById('notes').value.trim(), createdAt: Date.now(), status: 'Pending' };
+  try{ const id = await pushOrder(order); location.href = `confirmation.html?orderId=${id}` }catch(err){ console.error(err); alert('Failed to place order'); }
+});
+</script></body></html>
