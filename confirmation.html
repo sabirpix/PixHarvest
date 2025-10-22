@@ -1,0 +1,9 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Confirmation</title><link rel="stylesheet" href="css/styles.css"></head><body>
+<header class="container header"><a class="brand" href="index.html"><img src="https://ucarecdn.com/2d4ab199-055b-4852-906f-72dd184bd2d4/-/format/auto/" alt="logo"><div class="title"><h1>PixHarvest</h1></div></a></header>
+<main class="container"><div class="card"><h2>Order placed successfully!</h2><p id="orderInfo">We received your order.</p><a class="btn ghost" href="index.html">Back Home</a></div></main>
+<script type="module">
+import { initFirebase, getOrder } from './js/main.js';
+initFirebase();
+const params = new URLSearchParams(location.search); const id = params.get('orderId');
+if(id){ getOrder(id).then(o=>{ if(o){ document.getElementById('orderInfo').innerHTML = `<strong>Order ID:</strong> ${id} <br><strong>Product:</strong> ${o.productName || o.productId} <br><strong>Qty:</strong> ${o.quantity} <br><strong>Status:</strong> ${o.status}` } }) }
+</script></body></html>
