@@ -1,0 +1,9 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>About</title><link rel="stylesheet" href="css/styles.css"></head><body>
+<header class="container header"><a class="brand" href="index.html"><img src="https://ucarecdn.com/2d4ab199-055b-4852-906f-72dd184bd2d4/-/format/auto/" alt="logo"><div class="title"><h1>PixHarvest</h1></div></a></header>
+<main class="container"><section class="card"><h2>Our Story</h2><p>PixHarvest brings handcrafted Assamese Pitha made using family recipes. We focus on quality and tradition.</p></section>
+<section style="margin-top:16px"><h3>Contact</h3><div class="grid"><div class="card form"><form id="contactForm"><label>Name</label><input id="cname" required><label>Email</label><input id="cemail" type="email" required><label>Message</label><textarea id="cmessage" rows="4" required></textarea><button class="btn primary" type="submit">Send</button></form></div><div class="card"><h4>Other ways</h4><p>Email: hello@pixharvest.example</p></div></div></section></main>
+<script type="module">
+import { initFirebase, pushContact } from './js/main.js';
+initFirebase();
+document.getElementById('contactForm').addEventListener('submit', async e=>{ e.preventDefault(); try{ await pushContact({ name: document.getElementById('cname').value.trim(), email: document.getElementById('cemail').value.trim(), message: document.getElementById('cmessage').value.trim(), createdAt: Date.now() }); alert('Thanks!'); e.target.reset(); }catch(err){ console.error(err); alert('Failed'); }});
+</script></body></html>
